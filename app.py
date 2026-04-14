@@ -1,25 +1,62 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, send_from_directory
+from flask_wtf import FlaskForm, CSRFProtect
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import sqlite3
 import os
 import io
+import re
 from datetime import datetime
 from functools import wraps
 import qrcode
+import bleach
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'alpha-fitness-secret-key-2026')
+
+# Initialize CSRF protection
+csrf = CSRFProtect()
+csrf.init_app(app)
+
+# Security configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'alpha-fitness-session-key-2026')
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['WTF_CSRF_ENABLED'] = True
+app.config['WTF_CSRF_TIME_LIMIT'] = 3600
+
+# Rate limiter
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # Database path
 DATABASE = os.path.join(os.path.dirname(__file__), 'user_entries.db')
 
-# Admin password - CHANGE THIS TO YOUR DESIRED PASSWORD
+# Admin password
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'alpha2026')
+
+
+def sanitize_input(text, max_length=500):
+    """Sanitize user input to prevent XSS"""
+    if text is None:
+        return ''
+    text = str(text).strip()
+    text = bleach.clean(text, tags=[], strip=True)
+    return text[:max_length]
+
 
 def get_db():
     """Connect to SQLite database"""
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def init_db():
     """Initialize database and create table if not exists"""
@@ -40,10 +77,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Initialize database on startup
+
 init_db()
 
-# Decorator for admin login
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -51,6 +88,21 @@ def admin_required(f):
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated_function
+
+
+# CSRF Form for Admin Login
+class LoginForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=1, max=100)])
+    submit = SubmitField('Login')
+
+
+# CSRF Form for Contact/Join Form
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=100)])
+    phone = StringField('Phone', validators=[DataRequired(), Length(min=5, max=20)])
+    interest = StringField('Interest', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 
 reviews = [
     {
@@ -157,65 +209,77 @@ gallery = [
     {"src": "/static/assets/gallery/unnamed (5).webp", "alt": "Fitness Club"},
 ]
 
+
 @app.route("/")
 def home():
     return render_template("home.html", trainers=trainers, gallery=gallery, reviews=reviews)
+
 
 @app.route('/imgs/<path:filename>')
 def serve_imgs(filename):
     root = os.path.join(app.root_path, 'imgs')
     return send_from_directory(root, filename)
 
+
 @app.route("/reviews")
 def reviews_page():
     return render_template("reviews.html", reviews=reviews)
+
 
 @app.route("/gallery")
 def gallery_page():
     return render_template("gallery.html", trainers=trainers, gallery=gallery)
 
+
 @app.route("/contact")
 def contact_page():
     return render_template("contact.html")
 
+
 @app.route("/submit", methods=["POST"])
 def submit_entry():
-    name = request.form.get("name")
-    email = request.form.get("email")
-    phone = request.form.get("phone")
-    interest = request.form.get("interest")
-    message = request.form.get("message")
+    name = sanitize_input(request.form.get("name"), 100)
+    phone = sanitize_input(request.form.get("phone"), 20)
+    interest = sanitize_input(request.form.get("interest"), 50)
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
+    if not name or not phone or not interest:
+        flash("Please fill in all required fields.", "error")
+        return redirect(url_for("contact_page"))
+
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         INSERT INTO entries (name, email, phone, interest, message, created_at)
         VALUES (?, ?, ?, ?, ?, ?)
-    ''', (name, email, phone, interest, message, created_at))
+    ''', (name, None, phone, interest, None, created_at))
     conn.commit()
     conn.close()
-    
+
     flash("Thank you! We'll contact you soon.", "success")
     return redirect(url_for("contact_page"))
 
-# Admin Routes
+
 @app.route("/admin/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
 def admin_login():
-    if request.method == "POST":
-        password = request.form.get("password")
+    form = LoginForm()
+    if form.validate_on_submit():
+        password = form.password.data
         if password == ADMIN_PASSWORD:
             session["admin_logged_in"] = True
             return redirect(url_for("admin_dashboard"))
         else:
             flash("Incorrect password. Please try again.", "error")
-    return render_template("admin_login.html")
+    return render_template("admin_login.html", form=form)
+
 
 @app.route("/admin/logout")
 def admin_logout():
     session.pop("admin_logged_in", None)
     flash("Logged out successfully.", "info")
     return redirect(url_for("admin_login"))
+
 
 @app.route("/admin")
 @admin_required
@@ -225,16 +289,18 @@ def admin_dashboard():
     cursor.execute("SELECT * FROM entries ORDER BY created_at DESC")
     entries = cursor.fetchall()
     conn.close()
-    
+
     total_entries = len(entries)
-    
-    return render_template("admin_dashboard.html", 
-                           entries=entries, 
+
+    return render_template("admin_dashboard.html",
+                           entries=entries,
                            total_entries=total_entries)
+
 
 @app.route("/admin/qr")
 def admin_qr_page():
     return render_template("admin_qr.html")
+
 
 @app.route("/qr-image")
 def qr_image():
@@ -244,6 +310,7 @@ def qr_image():
     qr.save(buf, 'PNG')
     buf.seek(0)
     return send_file(buf, mimetype='image/png')
+
 
 @app.route("/admin/delete/<int:entry_id>", methods=["POST"])
 @admin_required
@@ -255,6 +322,13 @@ def delete_entry(entry_id):
     conn.close()
     flash("Entry deleted successfully.", "success")
     return redirect(url_for("admin_dashboard"))
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    flash("Too many attempts. Please wait a minute and try again.", "error")
+    return redirect(url_for("admin_login")), 429
+
 
 if __name__ == "__main__":
     app.run(debug=True)
