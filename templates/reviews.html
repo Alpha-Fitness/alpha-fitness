@@ -36,11 +36,7 @@
             <div class="review-time">{{ r.time }}</div>
           </div>
         </div>
-        {% if r.photos %}
-        <span class="review-photos"><i class="fas fa-camera"></i></span>
-        {% endif %}
-      </div>
-      <p class="review-text">"{{ r.text }}"</p>
+        <p class="review-text">"{{ r.text }}"</p>
     </div>
     {% endfor %}
   </div>
