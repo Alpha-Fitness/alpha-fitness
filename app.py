@@ -1,18 +1,39 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file, send_from_directory
+from flask_wtf import FlaskForm, CSRFProtect
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Length, Email
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import sqlite3
 import os
 import io
+import re
 from datetime import datetime
 from functools import wraps
-import re
 import qrcode
+import bleach
 
 app = Flask(__name__)
 
+# Initialize CSRF protection
+csrf = CSRFProtect()
+csrf.init_app(app)
+
 # Security configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'alpha-fitness-session-key-2026')
+app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['WTF_CSRF_ENABLED'] = True
+app.config['WTF_CSRF_TIME_LIMIT'] = 3600
+
+# Rate limiter
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # Database path
 DATABASE = os.path.join(os.path.dirname(__file__), 'user_entries.db')
@@ -26,7 +47,7 @@ def sanitize_input(text, max_length=500):
     if text is None:
         return ''
     text = str(text).strip()
-    text = re.sub(r'[<>]', '', text)
+    text = bleach.clean(text, tags=[], strip=True)
     return text[:max_length]
 
 
@@ -69,8 +90,18 @@ def admin_required(f):
     return decorated_function
 
 
-# Track login attempts (simple in-memory rate limiting)
-login_attempts = {}
+# CSRF Form for Admin Login
+class LoginForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=1, max=100)])
+    submit = SubmitField('Login')
+
+
+# CSRF Form for Contact/Join Form
+class ContactForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=100)])
+    phone = StringField('Phone', validators=[DataRequired(), Length(min=5, max=20)])
+    interest = StringField('Interest', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 reviews = [
@@ -427,15 +458,17 @@ def submit_entry():
 
 
 @app.route("/admin/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
 def admin_login():
-    if request.method == "POST":
-        password = request.form.get("password")
+    form = LoginForm()
+    if form.validate_on_submit():
+        password = form.password.data
         if password == ADMIN_PASSWORD:
             session["admin_logged_in"] = True
             return redirect(url_for("admin_dashboard"))
         else:
             flash("Incorrect password. Please try again.", "error")
-    return render_template("admin_login.html")
+    return render_template("admin_login.html", form=form)
 
 
 @app.route("/admin/logout")
@@ -486,6 +519,12 @@ def delete_entry(entry_id):
     conn.close()
     flash("Entry deleted successfully.", "success")
     return redirect(url_for("admin_dashboard"))
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    flash("Too many attempts. Please wait a minute and try again.", "error")
+    return redirect(url_for("admin_login")), 429
 
 
 if __name__ == "__main__":
