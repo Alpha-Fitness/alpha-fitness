@@ -4,8 +4,8 @@ import os
 import io
 from datetime import datetime
 from functools import wraps
+import re
 import qrcode
-import bleach
 
 app = Flask(__name__)
 
@@ -13,9 +13,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'alpha-fitness-session-key-2026')
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['WTF_CSRF_ENABLED'] = True
 
-# Database path - works on both local and Vercel
+# Database path
 DATABASE = os.path.join(os.path.dirname(__file__), 'user_entries.db')
 
 # Admin password
@@ -27,7 +26,7 @@ def sanitize_input(text, max_length=500):
     if text is None:
         return ''
     text = str(text).strip()
-    text = bleach.clean(text, tags=[], strip=True)
+    text = re.sub(r'[<>]', '', text)
     return text[:max_length]
 
 
