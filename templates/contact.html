@@ -69,14 +69,29 @@
           <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
         </div>
         <div class="form-group">
-          <label for="interest">Membership Interest</label>
-          <select id="interest" name="interest" required>
-            <option value="">Select an option</option>
-            <option value="Basic Membership">Basic Membership</option>
-            <option value="Personal Training">Personal Training</option>
-            <option value="Group Classes">Group Classes</option>
-            <option value="Day Pass">Day Pass</option>
-          </select>
+          <label>Select Package</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,0,51,0.2);">
+              <label for="normal_package" style="display: block; margin-bottom: 8px; color: var(--neon); font-weight: 600;">Normal Package</label>
+              <select id="normal_package" name="normal_package" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,0,51,0.3); border-radius: 6px; color: #fff; font-size: 0.95rem;">
+                <option value="">Select Duration</option>
+                <option value="Normal - Monthly">Monthly</option>
+                <option value="Normal - 3 Months">3 Months</option>
+                <option value="Normal - 6 Months">6 Months</option>
+                <option value="Normal - 12 Months">12 Months</option>
+              </select>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,0,51,0.2);">
+              <label for="couple_package" style="display: block; margin-bottom: 8px; color: var(--neon); font-weight: 600;">Couple Package</label>
+              <select id="couple_package" name="couple_package" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,0,51,0.3); border-radius: 6px; color: #fff; font-size: 0.95rem;">
+                <option value="">Select Duration</option>
+                <option value="Couple - Monthly">Monthly</option>
+                <option value="Couple - 3 Months">3 Months</option>
+                <option value="Couple - 6 Months">6 Months</option>
+                <option value="Couple - Personal Training">Personal Training</option>
+              </select>
+            </div>
+          </div>
         </div>
         <button type="submit" class="form-submit">
           <i class="fas fa-paper-plane"></i> Join Now

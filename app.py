@@ -469,10 +469,19 @@ def contact_page():
 def submit_entry():
     name = sanitize_input(request.form.get("name"), 100)
     phone = sanitize_input(request.form.get("phone"), 20)
-    interest = sanitize_input(request.form.get("interest"), 50)
+    normal_package = sanitize_input(request.form.get("normal_package"), 50)
+    couple_package = sanitize_input(request.form.get("couple_package"), 50)
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if not name or not phone or not interest:
+    # Combine selected packages
+    packages = []
+    if normal_package:
+        packages.append(normal_package)
+    if couple_package:
+        packages.append(couple_package)
+    interest = ", ".join(packages) if packages else "Not specified"
+
+    if not name or not phone or (not normal_package and not couple_package):
         flash("Please fill in all required fields.", "error")
         return redirect(url_for("contact_page"))
 
