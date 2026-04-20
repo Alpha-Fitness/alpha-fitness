@@ -15,7 +15,7 @@ import bleach
 import resend
 
 # Email configuration
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', 're_U2vRRsDJ_KV8CMedr6djxDAkynZpXivkf')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
 OWNER_EMAIL = "alphafitnessclub9019@gmail.com"
 
 def send_notification_email(name, phone, interest):
