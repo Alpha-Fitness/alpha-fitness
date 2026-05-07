@@ -102,12 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const animateObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const el = entry.target;
-        const delay = parseInt(el.getAttribute('data-aos-delay')) || 0;
-        setTimeout(() => {
-          el.classList.add('aos-animate');
-        }, delay);
-        animateObserver.unobserve(el);
+        entry.target.classList.add('aos-animate');
+        animateObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
@@ -241,24 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
           item.style.display = 'none';
         }
       });
-    });
-  });
-
-  // Parallax Tilt Effect
-  const tiltElements = document.querySelectorAll('[data-tilt]');
-  tiltElements.forEach(el => {
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -8;
-      const rotateY = ((x - centerX) / centerX) * 8;
-      el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
     });
   });
 });

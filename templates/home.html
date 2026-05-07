@@ -99,7 +99,7 @@
   </div>
   <div class="home-gallery">
     {% for g in gallery[:8] %}
-    <div class="home-gallery-item" data-aos data-aos-delay="{{ loop.index0 * 80 }}">
+    <div class="home-gallery-item" data-aos>
       <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
       <div class="home-gallery-overlay">
         <i class="fas fa-expand"></i>
