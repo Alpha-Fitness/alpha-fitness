@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxPrev = document.getElementById('lightbox-prev');
   const lightboxNext = document.getElementById('lightbox-next');
-  const galleryItems = document.querySelectorAll('.gallery-item, .home-gallery-item');
+  const galleryItems = document.querySelectorAll('.gallery-item, .home-gallery-item, .coverflow-item');
   
   let currentImageIndex = 0;
   const images = [];
@@ -165,10 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
         src: img.src,
         alt: img.alt
       });
-      item.addEventListener('click', () => {
-        currentImageIndex = index;
-        openLightbox();
-      });
+      // Coverflow items handle their own clicks; others open lightbox directly
+      if (!item.classList.contains('coverflow-item')) {
+        item.addEventListener('click', () => {
+          currentImageIndex = index;
+          openLightbox();
+        });
+      }
     }
   });
   
@@ -239,4 +242,140 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+  // ========== COVERFLOW 3D CAROUSEL ==========
+  function initCoverflow(container) {
+    const track = container.querySelector('.coverflow-track');
+    const items = Array.from(track.querySelectorAll('.coverflow-item'));
+    const prevBtn = container.querySelector('.coverflow-prev');
+    const nextBtn = container.querySelector('.coverflow-next');
+    const dotsContainer = container.querySelector('.coverflow-dots');
+
+    if (items.length === 0) return;
+
+    let current = 0;
+    const total = items.length;
+    let autoplayTimer = null;
+
+    function render() {
+      const containerW = container.offsetWidth;
+      const isMobile = containerW < 500;
+      const itemW = isMobile
+        ? Math.min(180, containerW * 0.55)
+        : Math.min(320, containerW * 0.3);
+      const itemH = itemW * 0.75;
+      const centerX = containerW / 2;
+      const containerH = container.offsetHeight;
+
+      items.forEach((item, i) => {
+        const offset = i - current;
+        const absOff = Math.abs(offset);
+
+        if (absOff > 3) {
+          item.style.display = 'none';
+          return;
+        }
+        item.style.display = 'block';
+
+        const translateX = offset * (itemW * 0.6);
+        const translateZ = -absOff * 70;
+        const rotateY = offset * -40;
+        const scale = 1 - absOff * 0.12;
+        const opacity = Math.max(1 - absOff * 0.28, 0.15);
+        const zIndex = 100 - absOff * 10;
+
+        item.classList.toggle('active', i === current);
+
+        if (item.style.width !== `${itemW}px`) {
+          item.style.width = `${itemW}px`;
+        }
+        item.style.height = `${itemH}px`;
+        item.style.left = `${centerX - itemW / 2}px`;
+        item.style.top = `${(containerH - itemH) / 2}px`;
+        item.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+        item.style.zIndex = Math.max(zIndex, 1);
+        item.style.opacity = opacity;
+      });
+
+      // Update dots
+      const dots = dotsContainer.querySelectorAll('.coverflow-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === current);
+      });
+
+      // Update button states
+      prevBtn.style.opacity = current === 0 ? '0.3' : '1';
+      prevBtn.style.pointerEvents = current === 0 ? 'none' : 'auto';
+      nextBtn.style.opacity = current === total - 1 ? '0.3' : '1';
+      nextBtn.style.pointerEvents = current === total - 1 ? 'none' : 'auto';
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      current = index;
+      render();
+    }
+
+    function prev() { goTo(current - 1); }
+    function next() { goTo(current + 1); }
+
+    // Events
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    // Build dots
+    if (dotsContainer) {
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'coverflow-dot';
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    // Item clicks — navigate or open lightbox
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => {
+        if (i === current) {
+          currentImageIndex = i;
+          openLightbox();
+        } else {
+          goTo(i);
+        }
+      });
+    });
+
+    // Autoplay
+    function startAutoplay() {
+      if (total <= 1) return;
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        goTo(current < total - 1 ? current + 1 : 0);
+      }, 4000);
+    }
+
+    function stopAutoplay() {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+
+    container.addEventListener('mouseenter', stopAutoplay);
+    container.addEventListener('mouseleave', startAutoplay);
+
+    // Resize handler
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(render, 150);
+    });
+
+    render();
+    startAutoplay();
+  }
+
+  // Initialize coverflows
+  const galleryCoverflow = document.getElementById('coverflowGallery');
+  const homeCoverflow = document.getElementById('coverflowHome');
+  if (galleryCoverflow) initCoverflow(galleryCoverflow);
+  if (homeCoverflow) initCoverflow(homeCoverflow);
 });
