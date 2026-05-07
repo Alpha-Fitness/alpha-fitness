@@ -97,17 +97,15 @@
     <h2>Our Gallery</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="coverflow coverflow-home" data-aos id="coverflowHome">
-    <div class="coverflow-track" id="coverflowTrackHome">
-      {% for g in gallery[:8] %}
-      <div class="coverflow-item" data-index="{{ loop.index0 }}">
-        <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
+  <div class="home-gallery">
+    {% for g in gallery[:8] %}
+    <div class="home-gallery-item" data-aos>
+      <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
+      <div class="home-gallery-overlay">
+        <i class="fas fa-expand"></i>
       </div>
-      {% endfor %}
     </div>
-    <button class="coverflow-prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
-    <button class="coverflow-next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
-    <div class="coverflow-dots"></div>
+    {% endfor %}
   </div>
   <div style="text-align: center; margin-top: 50px;">
     <a href="/gallery" class="cta" data-aos><i class="fas fa-images"></i> View Full Gallery</a>

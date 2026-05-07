@@ -8,16 +8,24 @@
   <p data-aos data-aos-delay="100">Gym spaces, equipment, and trainers in action.</p>
 </section>
 
-<section class="coverflow coverflow-gallery" data-aos id="coverflowGallery">
-  <div class="coverflow-track" id="coverflowTrackGallery">
-    {% for g in gallery %}
-    <div class="coverflow-item" data-index="{{ loop.index0 }}">
-      <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
+<section class="gallery container">
+  {% for g in gallery %}
+  <div class="gallery-item" data-aos data-category="equipment">
+    <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
+    <div class="gallery-overlay">
+      <i class="fas fa-expand"></i>
+      <span>{{ g.alt }}</span>
     </div>
-    {% endfor %}
   </div>
-  <button class="coverflow-prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
-  <button class="coverflow-next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
-  <div class="coverflow-dots"></div>
+  {% endfor %}
 </section>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img class="lightbox-content" id="lightbox-img">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+  <button class="lightbox-nav lightbox-prev" id="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+  <button class="lightbox-nav lightbox-next" id="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+</div>
 {% endblock %}
