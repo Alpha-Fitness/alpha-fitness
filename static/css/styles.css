@@ -813,6 +813,7 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   padding-bottom: 60px;
+  perspective: 1200px;
 }
 
 .gallery-item {
@@ -826,7 +827,6 @@ body {
 }
 
 .gallery-item:hover {
-  transform: translateY(-6px);
   border-color: rgba(255, 0, 51, 0.4);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 0, 51, 0.15);
 }
@@ -838,8 +838,20 @@ body {
   transition: transform 0.5s ease;
 }
 
-.gallery-item:hover img {
-  transform: scale(1.08);
+[data-tilt] {
+  transition: transform 0.2s cubic-bezier(0.03, 0.98, 0.52, 0.99), box-shadow 0.4s ease;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+[data-tilt]:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 0, 51, 0.15);
+}
+
+[data-tilt] img {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .gallery-overlay {
@@ -1296,6 +1308,8 @@ body {
   opacity: 0;
   transform: translateY(30px);
   transition-property: transform, opacity;
+  transition-duration: 0.6s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-aos].aos-animate {

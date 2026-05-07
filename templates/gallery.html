@@ -10,7 +10,7 @@
 
 <section class="gallery container">
   {% for g in gallery %}
-  <div class="gallery-item" data-aos data-category="equipment">
+  <div class="gallery-item" data-aos data-aos-delay="{{ loop.index0 * 60 }}" data-tilt data-category="equipment">
     <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
     <div class="gallery-overlay">
       <i class="fas fa-expand"></i>
