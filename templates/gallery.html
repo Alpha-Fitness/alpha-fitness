@@ -8,16 +8,23 @@
   <p data-aos data-aos-delay="100">Gym spaces, equipment, and trainers in action.</p>
 </section>
 
-<section class="gallery container">
-  {% for g in gallery %}
-  <div class="gallery-item" data-aos data-category="equipment">
-    <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
-    <div class="gallery-overlay">
-      <i class="fas fa-expand"></i>
-      <span>{{ g.alt }}</span>
+<section class="gallery-scroll-container" data-aos>
+  <button class="gallery-scroll-btn gallery-prev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+  <div class="gallery-scroller" id="galleryScroller">
+    <div class="gallery-track" id="galleryTrack">
+      {% for g in gallery %}
+      <div class="gallery-item" data-index="{{ loop.index0 }}">
+        <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
+        <div class="gallery-overlay">
+          <i class="fas fa-expand"></i>
+        </div>
+        <div class="gallery-item-caption">{{ g.alt }}</div>
+      </div>
+      {% endfor %}
     </div>
   </div>
-  {% endfor %}
+  <button class="gallery-scroll-btn gallery-next" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+  <div class="gallery-scroll-dots" id="galleryDots"></div>
 </section>
 
 <!-- Lightbox Modal -->

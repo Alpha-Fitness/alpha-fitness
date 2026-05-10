@@ -220,23 +220,68 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'ArrowRight') showNext();
   });
 
-  // Gallery filter functionality
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const galleryItemsPage = document.querySelectorAll('.gallery-item');
-  
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      
-      galleryItemsPage.forEach(item => {
-        if (filter === 'all' || item.getAttribute('data-category') === filter) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
+  // Gallery Scroll-Snap Navigation
+  const galleryScroller = document.getElementById('galleryScroller');
+  const galleryTrack = document.getElementById('galleryTrack');
+  const galleryDots = document.getElementById('galleryDots');
+  const galleryPrevBtn = document.querySelector('.gallery-prev');
+  const galleryNextBtn = document.querySelector('.gallery-next');
+
+  if (galleryScroller && galleryTrack && galleryDots) {
+    const items = galleryTrack.querySelectorAll('.gallery-item');
+    const itemCount = items.length;
+
+    function getItemWidth() {
+      if (items.length === 0) return 0;
+      const first = items[0];
+      return first.offsetWidth + 20;
+    }
+
+    function scrollToIndex(index) {
+      const scrollTarget = index * getItemWidth();
+      galleryScroller.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+    }
+
+    function updateActiveDot() {
+      const dots = galleryDots.querySelectorAll('.gallery-scroll-dot');
+      const scrollLeft = galleryScroller.scrollLeft;
+      const itemW = getItemWidth();
+      const activeIndex = itemW > 0 ? Math.round(scrollLeft / itemW) : 0;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === Math.min(activeIndex, itemCount - 1));
       });
-    });
-  });
+    }
+
+    // Build dots
+    for (let i = 0; i < itemCount; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'gallery-scroll-dot';
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => scrollToIndex(i));
+      galleryDots.appendChild(dot);
+    }
+
+    // Prev/Next buttons
+    if (galleryPrevBtn) {
+      galleryPrevBtn.addEventListener('click', () => {
+        const currentIndex = galleryScroller.scrollLeft > 0
+          ? Math.round(galleryScroller.scrollLeft / getItemWidth())
+          : 0;
+        scrollToIndex(Math.max(0, currentIndex - 1));
+      });
+    }
+
+    if (galleryNextBtn) {
+      galleryNextBtn.addEventListener('click', () => {
+        const currentIndex = Math.round(galleryScroller.scrollLeft / getItemWidth());
+        scrollToIndex(Math.min(itemCount - 1, currentIndex + 1));
+      });
+    }
+
+    // Update dots on scroll
+    galleryScroller.addEventListener('scroll', updateActiveDot);
+
+    // Touch swipe - update dots on end
+    galleryScroller.addEventListener('touchend', updateActiveDot);
+  }
 });
