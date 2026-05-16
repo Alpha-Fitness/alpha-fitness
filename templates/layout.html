@@ -14,6 +14,7 @@
   </style>
 </head>
 <body>
+  {% include 'components/loading.html' %}
   <header class="site-header">
     <div class="container header-inner">
       <a href="/" class="logo" aria-label="Alpha Fitness logo">
@@ -42,7 +43,14 @@
   </nav>
   <div class="mobile-nav-overlay"></div>
 
-  
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay">
+    <a href="/">Home</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/reviews">Reviews</a>
+    <a href="/contact">Contact</a>
+    <a href="/contact">Join Now</a>
+  </div>
 
   <main class="container">
     {% block content %}{% endblock %}
@@ -67,6 +75,8 @@
   <button class="back-to-top" aria-label="Back to top">
     <i class="fas fa-chevron-up"></i>
   </button>
+
+  {% include 'components/mobile-cta.html' %}
 
   <!-- Lightbox Modal -->
   <div class="lightbox" id="lightbox">

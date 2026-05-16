@@ -20,70 +20,70 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="stats-bar">
-    <div class="stat-item" data-aos>
-      <span class="stat-number" data-count="200">0</span>
-      <span class="stat-label">Happy Members</span>
-    </div>
-    <div class="stat-item" data-aos>
-      <span class="stat-number" data-count="5">0</span>
-      <span class="stat-label">Star Rating</span>
-    </div>
-    <div class="stat-item" data-aos>
-      <span class="stat-number" data-count="38">0</span>
-      <span class="stat-label">Testimonials</span>
-    </div>
-    <div class="stat-item" data-aos>
-      <span class="stat-number" data-count="8">0</span>
-      <span class="stat-label">Years Experience</span>
-    </div>
+<!-- Stats Section -->
+<section class="stats-section" data-aos="fade-up">
+  <div class="stat-item" data-aos="fade-up">
+    <span class="stat-number" data-count="200" data-suffix="+">0</span>
+    <span class="stat-label">Happy Members</span>
+  </div>
+  <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+    <span class="stat-number" data-count="5">0</span>
+    <span class="stat-label">Star Rating</span>
+  </div>
+  <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+    <span class="stat-number" data-count="38" data-suffix="+">0</span>
+    <span class="stat-label">Testimonials</span>
+  </div>
+  <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+    <span class="stat-number" data-count="8" data-suffix="+">0</span>
+    <span class="stat-label">Years Experience</span>
   </div>
 </section>
 
-<section class="section" id="services">
-  <div class="section-header" data-aos>
+<!-- Services Section -->
+<section id="services" class="section">
+  <div class="section-header" data-aos="fade-up">
     <p class="section-eyebrow">What We Offer</p>
     <h2>Our Services</h2>
     <div class="section-divider"></div>
   </div>
   <div class="services-grid">
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up">
       <div class="service-icon"><i class="fas fa-running"></i></div>
       <h3>Adult Sports</h3>
       <p>Stay active with our range of adult sports programs designed for all fitness levels.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
       <div class="service-icon"><i class="fas fa-dumbbell"></i></div>
       <h3>Crossfit</h3>
       <p>High-intensity functional training to build strength and endurance.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up" data-aos-delay="200">
       <div class="service-icon"><i class="fas fa-fire"></i></div>
       <h3>HIIT Classes</h3>
       <p>Burn calories fast with our high-intensity interval training sessions.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up">
       <div class="service-icon"><i class="fas fa-apple-whole"></i></div>
       <h3>Nutrition Consulting</h3>
       <p>Expert nutritional guidance to complement your fitness journey.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
       <div class="service-icon"><i class="fas fa-user-check"></i></div>
       <h3>Personal Training</h3>
       <p>One-on-one training sessions tailored to your specific goals.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up" data-aos-delay="200">
       <div class="service-icon"><i class="fas fa-chalkboard-teacher"></i></div>
       <h3>Private Lessons</h3>
       <p>Personalized instruction in a private setting for focused learning.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up">
       <div class="service-icon"><i class="fas fa-weight-scale"></i></div>
       <h3>Weight Training</h3>
       <p>Build muscle and strength with our fully equipped weight room.</p>
     </div>
-    <div class="service-card" data-aos>
+    <div class="service-card" data-aos="fade-up" data-aos-delay="100">
       <div class="service-icon"><i class="fas fa-child"></i></div>
       <h3>Youth Sports</h3>
       <p>Fitness programs designed specifically for young athletes.</p>
@@ -91,78 +91,255 @@
   </div>
 </section>
 
-<section class="section" id="gallery-preview">
-  <div class="section-header" data-aos>
+<!-- Gallery Section -->
+<section id="gallery-preview" class="gallery-section-home">
+  <div class="section-header" data-aos="fade-up">
     <p class="section-eyebrow">See For Yourself</p>
     <h2>Our Gallery</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="home-gallery">
+  <div class="gallery-masonry">
     {% for g in gallery[:8] %}
-    <div class="home-gallery-item" data-aos>
+    <div class="gallery-item" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" data-parallax>
       <img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy">
-      <div class="home-gallery-overlay">
+      <div class="gallery-overlay">
         <i class="fas fa-expand"></i>
+        <span class="gallery-overlay-text">{{ g.alt }}</span>
       </div>
     </div>
     {% endfor %}
   </div>
-  <div style="text-align: center; margin-top: 50px;">
-    <a href="/gallery" class="cta" data-aos><i class="fas fa-images"></i> View Full Gallery</a>
+  <div style="text-align: center; margin-top: 3rem;">
+    <a href="/gallery" class="btn-primary" data-aos="fade-up"><i class="fas fa-images"></i> View Full Gallery</a>
   </div>
 </section>
 
-<section class="section" id="trainers">
-  <div class="section-header" data-aos>
-    <p class="section-eyebrow">Expert Guidance</p>
-    <h2>Meet The Team</h2>
-    <div class="section-divider"></div>
+<!-- Trainers Section -->
+<section id="trainers" class="trainers-section">
+  <div class="trainers-header" data-aos="fade-up">
+    <h2>Meet Our <span>Trainers</span></h2>
+    <div class="section-line"></div>
   </div>
-  <div class="grid-trainers">
+  <div class="trainers-grid">
     {% for t in trainers %}
-    <div class="card trainer" data-aos>
-      <img src="{{ t.image }}" alt="{{ t.name }}">
-      <div class="card-content">
-        <h3>{{ t.name }}</h3>
-        <span class="muted">{{ t.title }}</span>
-        <p>{{ t.bio }}</p>
+    <div class="trainer-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 150 }}">
+      <img src="{{ t.image }}" alt="{{ t.name }}" class="trainer-image" loading="lazy">
+      <div class="trainer-overlay">
+        <div class="trainer-info">
+          <span class="trainer-role">{{ t.title }}</span>
+          <h3 class="trainer-name">{{ t.name }}</h3>
+          <p class="trainer-specialty">{{ t.bio }}</p>
+          <div class="trainer-stats">
+            <div class="trainer-stat">
+              <span class="trainer-stat-value">{{ ["15+","8+","5+"][loop.index0] }}</span>
+              <span class="trainer-stat-label">Years Exp</span>
+            </div>
+            <div class="trainer-stat">
+              <span class="trainer-stat-value">{{ ["500+","300+","200+"][loop.index0] }}</span>
+              <span class="trainer-stat-label">Clients</span>
+            </div>
+            <div class="trainer-stat">
+              <span class="trainer-stat-value">{{ ["4.9","4.8","4.9"][loop.index0] }}</span>
+              <span class="trainer-stat-label">Rating</span>
+            </div>
+          </div>
+          <div class="trainer-social">
+            <a href="tel:+918281954174" class="trainer-social-link" aria-label="Call">
+              <i class="fas fa-phone"></i>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </section>
 
-<section class="section" id="reviews-teaser">
-  <div class="section-header" data-aos>
-    <p class="section-eyebrow">Client Stories</p>
-    <h2>What Members Say</h2>
-    <div class="section-divider"></div>
+<!-- Education Section -->
+<section id="education" class="education-section">
+  <div class="education-header" data-aos="fade-up">
+    <h2>Fitness <span>Academy</span></h2>
+    <div class="section-line"></div>
   </div>
-  <div class="reviews-teaser-grid">
-    {% for r in reviews[:3] %}
-    <div class="review-card" data-aos>
-      <div class="review-card-header">
-        <div class="reviewer-avatar-small">
-          {{ r.name[0] }}
-        </div>
-        <div>
-          <div class="reviewer-name">{{ r.name }}</div>
-          <div class="review-card-stars">★★★★★</div>
+  <p class="education-subtitle" data-aos="fade-up" data-aos-delay="100">
+    Learn proper techniques and maximize your results. Tap or hover on any card to reveal expert tips.
+  </p>
+  <div class="education-tabs" data-aos="fade-up" data-aos-delay="200">
+    <button class="education-tab active" data-category="all">All</button>
+    <button class="education-tab" data-category="strength">Strength</button>
+    <button class="education-tab" data-category="cardio">Cardio</button>
+    <button class="education-tab" data-category="flexibility">Flexibility</button>
+    <button class="education-tab" data-category="nutrition">Nutrition</button>
+  </div>
+  <div class="education-grid">
+    <!-- Card 1: Deadlift -->
+    <div class="education-card" data-category="strength" data-aos="fade-up">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Deadlift Form" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Strength</span>
+          <h3 class="education-card-title">Perfect Deadlift Form</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
         </div>
       </div>
-      <p class="review-card-text">"{{ r.text[:150] }}..."</p>
-      <span class="review-card-time">{{ r.time }}</span>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Deadlift Mastery</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Stand with feet hip-width apart, bar over midfoot</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Hinge at hips, grip bar just outside knees</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Keep chest up, back flat, engage your core</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Drive through heels, extend hips and knees together</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: Never round your lower back!</p>
+      </div>
     </div>
-    {% endfor %}
-  </div>
-  <div style="text-align: center; margin-top: 50px;">
-    <a href="/reviews" class="cta" data-aos><i class="fas fa-star"></i> Read All {{ reviews|length }} Reviews</a>
+    <!-- Card 2: Squat -->
+    <div class="education-card" data-category="strength" data-aos="fade-up" data-aos-delay="100">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80" alt="Squat Form" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Strength</span>
+          <h3 class="education-card-title">Squat Fundamentals</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
+        </div>
+      </div>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Squat Like a Pro</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Feet shoulder-width, toes slightly outward</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Break at hips and knees simultaneously</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Knees track over toes, don't cave inward</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Go parallel or below, drive up through heels</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: Squeeze glutes at the top!</p>
+      </div>
+    </div>
+    <!-- Card 3: HIIT -->
+    <div class="education-card" data-category="cardio" data-aos="fade-up" data-aos-delay="200">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1549576490-b0b4831ef60a?w=600&q=80" alt="HIIT Training" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Cardio</span>
+          <h3 class="education-card-title">HIIT Essentials</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
+        </div>
+      </div>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Maximize HIIT</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Warm up for 5-10 minutes before starting</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Work at 85-95% max effort during intervals</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Rest periods should be active recovery</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Limit sessions to 20-30 minutes total</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: 2-3 HIIT sessions per week max!</p>
+      </div>
+    </div>
+    <!-- Card 4: Stretching -->
+    <div class="education-card" data-category="flexibility" data-aos="fade-up">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80" alt="Stretching" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Flexibility</span>
+          <h3 class="education-card-title">Dynamic Stretching</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
+        </div>
+      </div>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Stretch Right</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Dynamic stretches before workout</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Static stretches after workout</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Hold each stretch for 20-30 seconds</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Never stretch to the point of pain</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: Breathe deeply while stretching!</p>
+      </div>
+    </div>
+    <!-- Card 5: Protein -->
+    <div class="education-card" data-category="nutrition" data-aos="fade-up" data-aos-delay="100">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80" alt="Protein Nutrition" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Nutrition</span>
+          <h3 class="education-card-title">Protein Intake Guide</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
+        </div>
+      </div>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Fuel Your Gains</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Aim for 1.6-2.2g protein per kg bodyweight</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Spread intake across 4-5 meals daily</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Post-workout meal within 2 hours</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Include variety: chicken, fish, eggs, legumes</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: Casein before bed for recovery!</p>
+      </div>
+    </div>
+    <!-- Card 6: Bench Press -->
+    <div class="education-card" data-category="strength" data-aos="fade-up" data-aos-delay="200">
+      <div class="education-card-face education-card-front">
+        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=80" alt="Bench Press" loading="lazy">
+        <div class="education-card-front-content">
+          <span class="education-card-category">Strength</span>
+          <h3 class="education-card-title">Bench Press Basics</h3>
+          <p class="education-card-hint"><i class="fas fa-pen"></i> Tap to learn</p>
+        </div>
+      </div>
+      <div class="education-card-face education-card-back">
+        <h4 class="education-card-back-title">Press Perfectly</h4>
+        <ul class="education-card-steps">
+          <li class="education-card-step"><span class="education-card-step-num">1</span>Retract shoulder blades, arch upper back</li>
+          <li class="education-card-step"><span class="education-card-step-num">2</span>Grip slightly wider than shoulder width</li>
+          <li class="education-card-step"><span class="education-card-step-num">3</span>Lower bar to mid-chest with control</li>
+          <li class="education-card-step"><span class="education-card-step-num">4</span>Drive feet into floor, press up explosively</li>
+        </ul>
+        <p class="education-card-tip">Pro Tip: Keep wrists straight, not bent!</p>
+      </div>
+    </div>
   </div>
 </section>
 
+<!-- Testimonials Section -->
+<section id="reviews-teaser" class="testimonials-section">
+  <div class="testimonials-header" data-aos="fade-up">
+    <h2>What Our <span>Members Say</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="testimonials-carousel" data-aos="fade-up" data-aos-delay="200">
+    <div class="testimonials-track">
+      {% for r in reviews[:5] %}
+      <div class="testimonial-slide {% if loop.first %}active{% endif %}">
+        <div class="testimonial-quote-icon">"</div>
+        <div class="testimonial-stars">
+          {% for s in range(r.stars) %}
+          <span class="testimonial-star">★</span>
+          {% endfor %}
+        </div>
+        <p class="testimonial-text">{{ r.text[:200] }}</p>
+        <div class="testimonial-author">
+          <span class="testimonial-author-name">{{ r.name }}</span>
+          <span class="testimonial-author-role">{{ r.time }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="testimonials-nav">
+      <button class="testimonial-nav-btn prev" aria-label="Previous testimonial">&#10094;</button>
+      <div class="testimonials-dots"></div>
+      <button class="testimonial-nav-btn next" aria-label="Next testimonial">&#10095;</button>
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 2rem;" data-aos="fade-up" data-aos-delay="300">
+    <a href="/reviews" class="btn-secondary"><i class="fas fa-star"></i> Read All {{ reviews|length }} Reviews</a>
+  </div>
+</section>
+
+<!-- CTA Section -->
 <section class="cta-section">
   <div class="container">
-    <div class="cta-box" data-aos>
+    <div class="cta-box" data-aos="fade-up">
       <h2>Ready to Transform?</h2>
       <p>Join Alpha Fitness today and become the best version of yourself.</p>
       <a href="/contact" class="cta"><i class="fas fa-bolt"></i> Get Started Now</a>
